@@ -1,0 +1,15 @@
+const String headImagePath = 'assets/images/';
+const String userImage = '${headImagePath}taskmanagerperson.png';
+const String search = '${headImagePath}search.png';
+const String t = '${headImagePath}t.png';
+const String person1 = '${headImagePath}person1.png';
+const String person2 = '${headImagePath}person2.png';
+const String person3 = '${headImagePath}person3.png';
+const String cireclesmall = '${headImagePath}circle-small.png';
+const String zoomImage = '${headImagePath}zoom_icon.png';
+const String googleMeet = '${headImagePath}google_meet.png';
+const String messenger = '${headImagePath}facebook-messenger.png';
+const String facebook = '${headImagePath}facebook.png';
+const String apple = '${headImagePath}apple.png';
+const String hiking2 = '${headImagePath}hiking-hike.png';
+const String dribble = '${headImagePath}dribble.png';
