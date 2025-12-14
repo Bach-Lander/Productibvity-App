@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:productivity_app/pages/calendar_page.dart';
 import 'package:productivity_app/pages/homepage.dart';
+import 'package:productivity_app/pages/projects_page.dart';
 
 import '../constants/text_color.dart';
 
@@ -19,7 +20,7 @@ class _MainPageState extends State<MainPage> {
   final PageController _pageController = PageController();
   List pages = [
     const HomePage(),
-    Container(),
+    const ProjectsPage(),
     const CalendarPage(),
     Container(),
     Container()

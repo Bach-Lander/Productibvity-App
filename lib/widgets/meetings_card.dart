@@ -7,8 +7,8 @@ import 'package:productivity_app/models/meetings_model.dart';
 import '../constants/text_color.dart';
 
 class MeetingsCard extends StatelessWidget {
-  MeetingsModel meetingsModel;
-  MeetingsCard({Key? key, required this.meetingsModel}) : super(key: key);
+  final MeetingsModel meetingsModel;
+  const MeetingsCard({Key? key, required this.meetingsModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +60,9 @@ class MeetingsCard extends StatelessWidget {
           Container(
             height: 28,
             width: 65,
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(49, 187, 246, 0.25),
+            ),
             child: Center(
                 child: Text('Join',
                     style: GoogleFonts.spaceGrotesk(
@@ -67,9 +70,6 @@ class MeetingsCard extends StatelessWidget {
                       color: const Color(0xFF31BBF6),
                       fontWeight: FontWeight.w600,
                     ))),
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(49, 187, 246, 0.25),
-            ),
           )
         ],
       ),

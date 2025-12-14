@@ -2,10 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:productivity_app/blocs/auth/auth_bloc.dart';
+import 'package:productivity_app/blocs/github/github_bloc.dart';
 import 'package:productivity_app/firebase_options.dart';
 import 'package:productivity_app/pages/login_page.dart';
-import 'package:productivity_app/pages/main_page.dart';
 import 'package:productivity_app/repositories/auth_repository.dart';
+import 'package:productivity_app/repositories/github_repository.dart';
+import 'package:productivity_app/pages/onboarding_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,12 +23,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => AuthRepository(),
-      child: BlocProvider(
-        create: (context) => AuthBloc(
-          authRepository: RepositoryProvider.of<AuthRepository>(context),
-        )..add(AuthStarted()),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => AuthRepository()),
+        RepositoryProvider(create: (context) => GithubRepository()),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(
+              authRepository: RepositoryProvider.of<AuthRepository>(context),
+            )..add(AuthStarted()),
+          ),
+          BlocProvider(
+            create: (context) => GithubBloc(
+              githubRepository: RepositoryProvider.of<GithubRepository>(context),
+            ),
+          ),
+        ],
         child: MaterialApp(
           title: 'Productivity App',
           debugShowCheckedModeBanner: false,
@@ -36,7 +50,7 @@ class MyApp extends StatelessWidget {
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthAuthenticated) {
-                return const MainPage();
+                return const OnboardingPage();
               }
               if (state is AuthUnauthenticated) {
                 return const LoginPage();

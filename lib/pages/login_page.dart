@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:productivity_app/blocs/auth/auth_bloc.dart';
-import 'package:productivity_app/pages/main_page.dart';
+import 'package:productivity_app/pages/onboarding_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,22 +22,27 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if (state is AuthAuthenticated) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const MainPage()),
+              MaterialPageRoute(builder: (context) => const OnboardingPage()),
             );
           }
           if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
+            // On utilise un addPostFrameCallback pour être sûr que le build est fini
+            // et que le ScaffoldMessenger est prêt à recevoir la commande
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            });
           }
         },
         builder: (context, state) {
           if (state is AuthLoading) {
             return const Center(child: CircularProgressIndicator());
           }
+          // Si on est en AuthFailure, on affiche quand même le formulaire pour permettre de réessayer
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -62,8 +67,29 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      final email = _emailController.text;
-                      final password = _passwordController.text;
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+
+                      if (email.isEmpty || password.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please fill in all fields"),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (password.length < 6) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Password must be at least 6 characters"),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                        return;
+                      }
+
                       if (_isLogin) {
                         context.read<AuthBloc>().add(AuthLoginRequested(email, password));
                       } else {
